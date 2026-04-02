@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://tharanikaportfolio.vercel.app/sitemap.xml
