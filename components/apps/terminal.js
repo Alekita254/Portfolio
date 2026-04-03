@@ -14,10 +14,10 @@ export class Terminal extends Component {
         this.child_directories = {
             root: ["books", "projects", "personal-documents", "skills", "languages", "interests"],
             books: ["Eric-Jorgenson_The-Almanack-of-Naval-Ravikant.pdf", "Elon Musk: How the Billionaire CEO of SpaceX.pdf", "The $100 Startup_CHRIS_GUILLEBEAU.pdf", "The_Magic_of_Thinking_Big.pdf"],
-            skills: ["AIML DEV", "Python", "Tensorflow", "PyTorch", "Gpt", "LLM", "Langchain", "MCP"],
-            projects: ["DeepFake Detector", "Inside LLM", "How Image Generation Works", "PDF and Website RAG", "Natural Language to SQL to Natural Language", "Java Cheat sheet", "BIT Reward points Checker"],
-            interests: ["Machine Learning", "Deep Learning", "LLM", "GenAI", "MCP", "AI Agents"],
-            languages: ["C", "Java", "Python", "GoLang"],
+            skills: ["Full stack","Big data", "LLM", "Langchain", "MCP"],
+            projects: ["IoT DashBoard","Internship verification system","Website Rag","Gmail MCP"],
+            interests: ["Full Stack","Cloud Computing", "LLM", "GenAI", "MCP", "AI Agents"],
+            languages: ["C", "Java", "Python"],
         };
         this.state = {
             terminal: [],
