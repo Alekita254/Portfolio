@@ -112,7 +112,7 @@ function About() {
     return (
         <>
             <div className="w-20 md:w-28 my-4 bg-white rounded-full">
-                <img className="w-full" src="./images/logos/bitmoji.png" alt="Vivek Patel Logo" />
+                <img className="w-full" src="./images/logos/TR-PIC.jpeg" alt="Vivek Patel Logo" />
             </div>
             <div className=" mt-4 md:mt-8 text-lg md:text-2xl text-center px-1">
                 <div>my name is <span className="font-bold">THARANIKA</span> ,</div>
@@ -365,7 +365,7 @@ function Skills() {
                 />
             </div>
 
-            <ul className=" tracking-tight text-sm md:text-base w-10/12 emoji-list mt-4">
+            <ul className=" tracking-tight text-sm md:text-base w-10/12 -list mt-4">
                 <li className=" list-arrow text-sm md:text-base mt-4 leading-tight tracking-tight">
                     <div>From <strong>Machine Learning frameworks</strong> like TensorFlow, PyTorch, and Keras to <strong>cloud platforms</strong> like Azure and development tools like Docker and Git.</div>
                 </li>
