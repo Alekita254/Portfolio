@@ -15,7 +15,17 @@ export function Settings(props) {
     };
 
     let changeBackgroundImage = (e) => {
-        props.changeBackgroundImage($(e.target).data("path"));
+        const path = $(e.currentTarget).data("path");
+        if (path) {
+            props.changeBackgroundImage(path);
+        }
+    }
+
+    const handleWallpaperKeyDown = (e) => {
+        if (e.key === "Enter" || e.key === " ") {
+            e.preventDefault();
+            changeBackgroundImage(e);
+        }
     }
 
     return (
@@ -26,7 +36,18 @@ export function Settings(props) {
                 {
                     Object.keys(wallpapers).map((name, index) => {
                         return (
-                            <div key={index} tabIndex="1" onFocus={changeBackgroundImage} data-path={name} className={((name === props.currBgImgName) ? " border-yellow-700 " : " border-transparent ") + " md:px-28 md:py-20 md:m-4 m-2 px-14 py-10 outline-none border-4 border-opacity-80"} style={{ backgroundImage: `url(${wallpapers[name]})`, backgroundSize: "cover", backgroundRepeat: "no-repeat", backgroundPosition: "center center" }}></div>
+                            <div
+                                key={index}
+                                role="button"
+                                aria-label={`Set wallpaper ${name}`}
+                                tabIndex="0"
+                                onClick={changeBackgroundImage}
+                                onFocus={changeBackgroundImage}
+                                onKeyDown={handleWallpaperKeyDown}
+                                data-path={name}
+                                className={((name === props.currBgImgName) ? " border-yellow-700 " : " border-transparent ") + " md:px-28 md:py-20 md:m-4 m-2 px-14 py-10 outline-none border-4 border-opacity-80"}
+                                style={{ backgroundImage: `url(${wallpapers[name]})`, backgroundSize: "cover", backgroundRepeat: "no-repeat", backgroundPosition: "center center" }}
+                            ></div>
                         );
                     })
                 }

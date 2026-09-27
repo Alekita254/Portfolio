@@ -39,15 +39,21 @@ export class Terminal extends Component {
 
     reStartTerminal = () => {
         clearInterval(this.cursor);
-        $('#terminal-body').empty();
-        this.appendTerminalRow();
+        this.terminal_rows = 1;
+        this.prev_commands = [];
+        this.commands_index = -1;
+        this.setState({ terminal: [] }, () => {
+            this.appendTerminalRow();
+        });
     }
 
     appendTerminalRow = () => {
-        let terminal = this.state.terminal;
-        terminal.push(this.terminalRow(this.terminal_rows));
-        this.setState({ terminal });
-        this.terminal_rows += 2;
+        const rowId = this.terminal_rows;
+        this.setState((prevState) => ({
+            terminal: [...prevState.terminal, this.terminalRow(rowId)],
+        }), () => {
+            this.terminal_rows += 2;
+        });
     }
 
     terminalRow = (id) => {
@@ -60,7 +66,7 @@ export class Terminal extends Component {
                         <div className=" text-ubt-blue">{this.current_directory}</div>
                         <div className="text-white mx-px font-medium mr-1">$</div>
                     </div>
-                    <div id="cmd" onClick={this.focusCursor} className=" bg-transperent relative flex-1 overflow-hidden">
+                    <div id={`cmd-${id}`} onClick={this.focusCursor} className=" bg-transperent relative flex-1 overflow-hidden">
                         <span id={`show-${id}`} className=" float-left whitespace-pre pb-1 opacity-100 font-normal tracking-wider"></span>
                         <div id={`cursor-${id}`} className=" float-left mt-1 w-1.5 h-3.5 bg-white"></div>
                         <input id={`terminal-input-${id}`} data-row-id={id} onKeyDown={this.checkKey} onBlur={this.unFocusCursor} className=" absolute top-0 left-0 w-full opacity-0 outline-none bg-transparent" spellCheck={false} autoFocus={true} autoComplete="off" type="text" />
@@ -74,7 +80,8 @@ export class Terminal extends Component {
 
     focusCursor = (e) => {
         clearInterval(this.cursor);
-        this.startCursor($(e.target).data("row-id"));
+        const targetId = $(e.target).data("row-id") || $(e.target).closest("[data-row-id]").data("row-id") || (this.terminal_rows - 2);
+        this.startCursor(targetId);
     }
 
     unFocusCursor = (e) => {
@@ -83,10 +90,13 @@ export class Terminal extends Component {
 
     startCursor = (id) => {
         clearInterval(this.cursor);
+        if (!id || !$(`input#terminal-input-${id}`).length) {
+            id = this.terminal_rows - 2;
+        }
         $(`input#terminal-input-${id}`).trigger("focus");
         // On input change, set current text in span
-        $(`input#terminal-input-${id}`).on("input", function () {
-            $(`#cmd span#show-${id}`).text($(this).val());
+        $(`input#terminal-input-${id}`).off("input").on("input", function () {
+            $(`#show-${id}`).text($(this).val());
         });
         this.cursor = window.setInterval(function () {
             if ($(`#cursor-${id}`).css('visibility') === 'visible') {
