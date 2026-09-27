@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import $ from 'jquery';
 import identity from '../../config/identity';
+import portfolioContent from '../../content/portfolio';
 
 export class Terminal extends Component {
     constructor() {
@@ -167,7 +168,7 @@ export class Terminal extends Component {
 
         switch (main) {
             case "help":
-                result = "Available commands: help, about, projects, experience, writing, resume, contact, clear";
+                result = "Available commands: help, about, projects, experience, writing, resume, contact, whoami, ls, cv, clear";
                 break;
             case "about":
             case "projects":
@@ -177,6 +178,16 @@ export class Terminal extends Component {
             case "contact":
                 result = `Opening ${main.charAt(0).toUpperCase() + main.slice(1)}...`;
                 this.props.openApp(this.appCommands[main]);
+                break;
+            case "cv":
+                result = "Opening Resume...";
+                this.props.openApp("resume");
+                break;
+            case "whoami":
+                result = `${identity.name}<br/>${identity.professionalTitle}<br/>${identity.location}`;
+                break;
+            case "ls":
+                result = Object.keys(this.appCommands).concat(["terminal", "settings"]).map((appId) => `<span class='mr-3 text-ubt-blue'>${appId}</span>`).join('');
                 break;
             case "clear":
                 this.reStartTerminal();
@@ -214,7 +225,7 @@ export class Terminal extends Component {
         return (
             <div className="h-full w-full bg-ub-drk-abrgn text-white text-sm font-bold" id="terminal-body">
                 <div className="px-1 py-1 text-xs text-gray-300">
-                    {identity.osName} terminal. Type "help" to list commands.
+                    {identity.osName} terminal. Type "help" to list commands. Current profile: {portfolioContent.profile.name}.
                 </div>
                 {
                     this.state.terminal

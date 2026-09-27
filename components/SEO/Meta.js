@@ -3,7 +3,7 @@ import Head from 'next/head';
 import identity from '../../config/identity';
 
 export default function Meta() {
-    const hasDomain = identity.portfolioDomain && !identity.portfolioDomain.startsWith('YOUR_');
+    const hasDomain = Boolean(identity.portfolioDomain);
     const canonicalUrl = hasDomain ? `https://${identity.portfolioDomain}` : '';
     const pageTitle = identity.seo.siteTitle;
     const pageDescription = identity.seo.siteDescription;
@@ -37,8 +37,6 @@ export default function Meta() {
 
             <link rel="icon" href="images/logos/fevicon.svg" />
             <link rel="apple-touch-icon" href="images/logos/fevicon.png" />
-            <link rel="preload" href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@300;400;500;700&display=swap" as="style" />
-            <link href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@300;400;500;700&display=swap" rel="stylesheet"></link>
         </Head>
     )
 }

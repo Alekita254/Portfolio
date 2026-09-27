@@ -1,4 +1,5 @@
 import React from 'react'
+import identity from '../../config/identity';
 
 export default function BackgroundImage(props) {
     const bg_images = {
@@ -14,6 +15,11 @@ export default function BackgroundImage(props) {
     };
     return (
         <div style={{ backgroundImage: `url(${bg_images[props.img]})`, backgroundSize: "cover", backgroundRepeat: "no-repeat", backgroundPositionX: "center" }} className="bg-ubuntu-img absolute -z-10 top-0 right-0 overflow-hidden h-full w-full">
+            <div className="absolute inset-0 bg-black bg-opacity-55"></div>
+            <div className="desktop-identity absolute right-6 bottom-8 text-right text-white text-opacity-90 pointer-events-none select-none">
+                <div className="text-2xl md:text-4xl font-semibold tracking-[0.3em] uppercase">{identity.osName}</div>
+                <div className="mt-2 text-xs md:text-sm text-gray-300">{identity.terminalPersona}</div>
+            </div>
         </div>
     )
 }

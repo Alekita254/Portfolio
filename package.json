@@ -2,7 +2,6 @@
   "name": "alex-os-portfolio",
   "version": "2.0.0",
   "private": true,
-  "homepage": "https://YOUR_PORTFOLIO_DOMAIN/",
   "scripts": {
     "dev": "next dev",
     "build": "next build",

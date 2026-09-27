@@ -13,6 +13,7 @@ const apps = [
     {
         id: "about",
         title: "About",
+        description: "Who Alex Murimi is and how he engineers systems.",
         icon: './themes/Yaru/system/user-home.png',
         disabled: false,
         favourite: true,
@@ -22,6 +23,7 @@ const apps = [
     {
         id: "projects",
         title: "Projects",
+        description: "Systems and products Alex Murimi has built.",
         icon: './themes/Yaru/status/projects.svg',
         disabled: false,
         favourite: true,
@@ -31,6 +33,7 @@ const apps = [
     {
         id: "experience",
         title: "Experience",
+        description: "Alex Murimi's engineering journey and impact.",
         icon: './themes/Yaru/status/education.svg',
         disabled: false,
         favourite: true,
@@ -40,6 +43,7 @@ const apps = [
     {
         id: "writing",
         title: "Writing",
+        description: "Technical notes, ideas, and writing from Alex Murimi.",
         icon: './themes/Yaru/apps/gedit.png',
         disabled: false,
         favourite: true,
@@ -49,6 +53,7 @@ const apps = [
     {
         id: "resume",
         title: "Resume",
+        description: "Alex Murimi's current resume.",
         icon: './themes/Yaru/status/download.svg',
         disabled: false,
         favourite: true,
@@ -58,6 +63,7 @@ const apps = [
     {
         id: "terminal",
         title: "Terminal",
+        description: "Explore Alex OS through the command line.",
         icon: './themes/Yaru/apps/bash.png',
         disabled: false,
         favourite: true,
@@ -67,6 +73,7 @@ const apps = [
     {
         id: "contact",
         title: "Contact",
+        description: "Get in touch with Alex Murimi.",
         icon: './themes/Yaru/apps/gedit.png',
         disabled: false,
         favourite: true,
@@ -76,6 +83,7 @@ const apps = [
     {
         id: "settings",
         title: "Settings",
+        description: "Customize Alex OS display settings.",
         icon: './themes/Yaru/apps/gnome-control-center.png',
         disabled: false,
         favourite: true,

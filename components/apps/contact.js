@@ -72,11 +72,17 @@ export class Contact extends Component {
                 <div className="flex items-center justify-between w-full bg-ub-gedit-light bg-opacity-60 border-b border-t border-blue-400 text-sm">
                     <span className="font-bold ml-2">Contact {identity.name}</span>
                     <div className="flex">
-                        <div onClick={this.sendMessage} className="border border-black bg-black bg-opacity-50 px-3 py-0.5 my-1 mx-1 rounded hover:bg-opacity-80">Send</div>
+                        <button type="button" onClick={this.sendMessage} className="border border-black bg-black bg-opacity-50 px-3 py-0.5 my-1 mx-1 rounded hover:bg-opacity-80">Send</button>
                     </div>
                 </div>
                 <div className="relative flex-grow flex flex-col bg-ub-gedit-dark font-normal windowMainScreen">
                     <div className="absolute left-0 top-0 h-full px-2 bg-ub-gedit-darker"></div>
+                    <div className="pl-6 pr-4 py-3 border-b border-white border-opacity-10 text-sm space-y-1">
+                        <div>{identity.professionalTitle}</div>
+                        <div className="text-gray-300">{identity.location}</div>
+                        <div><a href={`mailto:${identity.email}`} className="underline underline-offset-2">{identity.email}</a></div>
+                        <div>{identity.phone}</div>
+                    </div>
                     <div className="relative">
                         <input id="sender-name" className=" w-full text-ubt-gedit-orange focus:bg-ub-gedit-light outline-none font-medium text-sm pl-6 py-0.5 bg-transparent" placeholder="Your Email / Name :" spellCheck="false" autoComplete="off" type="text" />
                         <span className="absolute left-1 top-1/2 transform -translate-y-1/2 font-bold light text-sm text-ubt-gedit-blue">1</span>
