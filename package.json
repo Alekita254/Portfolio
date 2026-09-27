@@ -1,8 +1,8 @@
 {
-  "name": "vivek9patel-portfolio",
+  "name": "alex-os-portfolio",
   "version": "2.0.0",
   "private": true,
-  "homepage": "https://vivek9patel.github.io/",
+  "homepage": "https://YOUR_PORTFOLIO_DOMAIN/",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
@@ -19,7 +19,6 @@
     "jquery": "^3.6.3",
     "next": "^13.1.2",
     "postcss": "^8.4.21",
-    "prop-types": "^15.8.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-draggable": "^4.4.5",

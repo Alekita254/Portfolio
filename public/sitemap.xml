@@ -2,12 +2,12 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 
   <url>
-    <loc>https://tharanikaportfolio.vercel.app/</loc>
+    <loc>https://YOUR_PORTFOLIO_DOMAIN/</loc>
     <changefreq>weekly</changefreq>
   </url>
 
   <url>
-    <loc>https://tharanikaportfolio.vercel.app/files/THARANIKA-RESUME.pdf</loc>
+    <loc>https://YOUR_PORTFOLIO_DOMAIN/files/resume.pdf</loc>
     <changefreq>monthly</changefreq>
   </url>
 

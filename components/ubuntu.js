@@ -4,6 +4,7 @@ import Desktop from './screen/desktop';
 import LockScreen from './screen/lock_screen';
 import Navbar from './screen/navbar';
 import ReactGA from 'react-ga4';
+import identity from '../config/identity';
 
 export default class Ubuntu extends Component {
 	constructor() {
@@ -90,7 +91,7 @@ export default class Ubuntu extends Component {
 
 		ReactGA.event({
 			category: `Screen Change`,
-			action: `Switched off the Ubuntu`
+			action: `Switched off ${identity.osName}`
 		});
 
 		document.getElementById('status-bar').blur();
