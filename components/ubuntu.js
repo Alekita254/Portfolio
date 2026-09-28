@@ -17,6 +17,21 @@ export default class Ubuntu extends Component {
 		};
 	}
 
+	getBootMode = () => this.props.bootMode || 'auto';
+
+	applyDesktopPreferences = () => {
+		const bg_image_name = localStorage.getItem('bg-image');
+		const screen_locked = localStorage.getItem('screen-locked');
+
+		if (bg_image_name !== null && bg_image_name !== undefined) {
+			this.setState({ bg_image_name });
+		}
+
+		if (screen_locked !== null && screen_locked !== undefined) {
+			this.setState({ screen_locked: screen_locked === 'true' });
+		}
+	};
+
 	componentDidMount() {
 		this.getLocalData();
 	}
@@ -28,31 +43,36 @@ export default class Ubuntu extends Component {
 	};
 
 	getLocalData = () => {
-		// Get Previously selected Background Image
-		let bg_image_name = localStorage.getItem('bg-image');
-		if (bg_image_name !== null && bg_image_name !== undefined) {
-			this.setState({ bg_image_name });
+		const bootMode = this.getBootMode();
+		this.applyDesktopPreferences();
+
+		if (bootMode === 'skip-boot') {
+			localStorage.setItem('shut-down', false);
+			localStorage.setItem('screen-locked', false);
+			this.setState({ booting_screen: false, shutDownScreen: false, screen_locked: false });
+			return;
+		}
+
+		if (bootMode === 'force-boot') {
+			localStorage.setItem('booting_screen', false);
+			localStorage.setItem('shut-down', false);
+			localStorage.setItem('screen-locked', false);
+			this.setState({ booting_screen: true, shutDownScreen: false, screen_locked: false });
+			this.setTimeOutBootScreen();
+			return;
 		}
 
 		let booting_screen = localStorage.getItem('booting_screen');
 		if (booting_screen !== null && booting_screen !== undefined) {
-			// user has visited site before
 			this.setState({ booting_screen: false });
 		} else {
-			// user is visiting site for the first time
 			localStorage.setItem('booting_screen', false);
 			this.setTimeOutBootScreen();
 		}
 
-		// get shutdown state
 		let shut_down = localStorage.getItem('shut-down');
-		if (shut_down !== null && shut_down !== undefined && shut_down === 'true') this.shutDown();
-		else {
-			// Get previous lock screen state
-			let screen_locked = localStorage.getItem('screen-locked');
-			if (screen_locked !== null && screen_locked !== undefined) {
-				this.setState({ screen_locked: screen_locked === 'true' ? true : false });
-			}
+		if (shut_down !== null && shut_down !== undefined && shut_down === 'true') {
+			this.shutDown();
 		}
 	};
 

@@ -210,6 +210,50 @@ input[type=range].ubuntu-slider::-webkit-slider-thumb {
     text-shadow: 0 2px 18px rgba(0, 0, 0, 0.7);
 }
 
+.workspace-helper-pulse {
+    animation: workspacePulse 3s ease-in-out infinite;
+}
+
+.workspace-screen-glow::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(120deg, transparent 12%, rgba(255, 255, 255, 0.06) 24%, transparent 36%);
+    transform: translateX(-120%);
+    animation: workspaceSheen 5.5s ease-in-out infinite;
+    pointer-events: none;
+}
+
+@keyframes workspacePulse {
+    0%,
+    100% {
+        transform: translateY(0);
+        opacity: 0.85;
+    }
+
+    50% {
+        transform: translateY(-2px);
+        opacity: 1;
+    }
+}
+
+@keyframes workspaceSheen {
+    0%,
+    100% {
+        transform: translateX(-120%);
+        opacity: 0;
+    }
+
+    18% {
+        opacity: 0.35;
+    }
+
+    40% {
+        transform: translateX(140%);
+        opacity: 0;
+    }
+}
+
 @media (max-width: 640px) {
     .desktop-identity {
         right: 1rem;
