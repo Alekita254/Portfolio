@@ -47,8 +47,6 @@ export default function WorkspaceScene({ phase, reducedMotion, onActivate, onSki
 
   return (
     <div className={(phase === 'booting' ? 'pointer-events-none opacity-0 ' : 'opacity-100 ') + 'ws-root absolute inset-0 overflow-hidden bg-[#040507] transition-opacity duration-300'}>
-      <style>{CSS}</style>
-
       {/* ------------------------------ Room ambience ------------------------------ */}
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(30,41,59,0.42),transparent_35%),linear-gradient(180deg,#06070a_0%,#0a0b0f_45%,#050608_100%)]"></div>
       <div className="absolute right-[12%] top-[18%] h-[34%] w-[26%] bg-[radial-gradient(circle,rgba(255,214,153,0.1),transparent_68%)] blur-3xl"></div>
@@ -234,31 +232,3 @@ export default function WorkspaceScene({ phase, reducedMotion, onActivate, onSki
     </div>
   );
 }
-
-const CSS = `
-.ws-wood{
-  background:
-    linear-gradient(180deg,rgba(255,255,255,.07),transparent 16%,rgba(0,0,0,.42) 100%),
-    repeating-linear-gradient(180deg,rgba(255,255,255,.028) 0 1px,transparent 1px 7px),
-    repeating-linear-gradient(178.6deg,rgba(0,0,0,.2) 0 2px,transparent 2px 23px),
-    repeating-linear-gradient(181deg,rgba(255,190,120,.035) 0 3px,transparent 3px 41px),
-    linear-gradient(180deg,#2c2118,#16100c);
-}
-.ws-blinds{background:repeating-linear-gradient(180deg,rgba(18,20,26,.92) 0 .32rem,rgba(60,66,80,.55) .32rem .4rem)}
-.ws-lines{background:repeating-linear-gradient(180deg,transparent 0 .5rem,rgba(255,255,255,.14) .5rem calc(.5rem + 1px))}
-.ws-leaf{border-radius:100% 0 100% 0;background:linear-gradient(160deg,#2f6b4f,#123326);box-shadow:inset 0 0 6px rgba(0,0,0,.4)}
-.ws-steam{width:.45rem;height:2.6rem;border-radius:999px;background:linear-gradient(180deg,transparent,rgba(255,255,255,.28),transparent);filter:blur(4px);opacity:0;animation:ws-steam 4s ease-in infinite}
-.ws-dust{opacity:0;animation:ws-dust 12s ease-in-out infinite}
-.ws-phone{opacity:.06;animation:ws-phone 11s ease-in-out infinite}
-.ws-grain{
-  opacity:.07;mix-blend-mode:overlay;
-  background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
-}
-@keyframes ws-steam{0%{transform:translateY(0) scaleX(1);opacity:0}25%{opacity:.55}100%{transform:translateY(-2.6rem) scaleX(1.8);opacity:0}}
-@keyframes ws-dust{0%,100%{transform:translate(0,0);opacity:0}20%{opacity:.5}50%{transform:translate(14px,-18px);opacity:.35}80%{opacity:.45}}
-@keyframes ws-phone{0%,82%,100%{opacity:.06}86%,94%{opacity:.9}}
-@media (prefers-reduced-motion: reduce){
-  .ws-root *{animation:none!important}
-  .ws-phone{opacity:.06}
-}
-`;
