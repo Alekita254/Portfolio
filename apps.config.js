@@ -1,4 +1,5 @@
 import { displayTerminal } from './components/apps/terminal';
+import { displayContentManager } from './components/apps/content-manager';
 import { displaySettings } from './components/apps/settings';
 import { displayContact } from './components/apps/contact';
 import {
@@ -79,6 +80,17 @@ const apps = [
         favourite: true,
         desktop_shortcut: true,
         screen: displayContact,
+    },
+    {
+        id: "content",
+        title: "Content",
+        description: "Edit the live portfolio bundle and export it locally.",
+        icon: './themes/Yaru/apps/gedit.png',
+        disabled: false,
+        favourite: false,
+        desktop_shortcut: false,
+        internalOnly: true,
+        screen: displayContentManager,
     },
     {
         id: "settings",

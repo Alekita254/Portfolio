@@ -1,6 +1,7 @@
 import identity from "../config/identity";
+import { mergeContentValue, readContentBundle } from "./runtime";
 
-const portfolioContent = {
+const defaultPortfolioContent = {
   profile: {
     name: identity.name,
     title: identity.professionalTitle,
@@ -158,5 +159,9 @@ const portfolioContent = {
     { label: "A Million Techies LMS", url: "https://learn.amilliontechies.com/" },
   ],
 };
+
+const portfolioContent = mergeContentValue(defaultPortfolioContent, readContentBundle()?.portfolio);
+
+export const portfolioDefaults = defaultPortfolioContent;
 
 export default portfolioContent;

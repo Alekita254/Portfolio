@@ -2,6 +2,8 @@ import React from 'react';
 import UbuntuApp from '../base/ubuntu_app';
 import identity from '../../config/identity';
 
+const isVisibleApp = (app) => !app.internalOnly;
+
 export class AllApplications extends React.Component {
     constructor() {
         super();
@@ -14,7 +16,7 @@ export class AllApplications extends React.Component {
 
     componentDidMount() {
         this.setState({
-            apps: this.props.apps,
+            apps: this.props.apps.filter(isVisibleApp),
         })
     }
 
@@ -23,8 +25,8 @@ export class AllApplications extends React.Component {
         this.setState({
             query,
             apps: query === "" || query === null
-                ? this.props.apps
-                : this.props.apps.filter((app) => app.title.toLowerCase().includes(query.toLowerCase())),
+                ? this.props.apps.filter(isVisibleApp)
+                : this.props.apps.filter((app) => isVisibleApp(app) && app.title.toLowerCase().includes(query.toLowerCase())),
         })
     }
 
@@ -35,7 +37,7 @@ export class AllApplications extends React.Component {
         if (frequentAppsInfo) {
             frequentAppsInfo.forEach((appInfo) => {
                 const app = this.props.apps.find((item) => item.id === appInfo.id);
-                if (app) {
+                if (app && isVisibleApp(app)) {
                     frequentApps.push(app);
                 }
             });

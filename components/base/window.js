@@ -107,6 +107,7 @@ export class Window extends Component {
         if (this.state.compactLayout) {
             return;
         }
+        this.props.hideSideBar(this.id, true);
         if (this.state.maximized) {
             this.restoreWindow();
         }
@@ -239,7 +240,7 @@ export class Window extends Component {
                     <WindowTopBar title={this.props.title} />
                     <WindowEditButtons minimize={this.minimizeWindow} maximize={this.maximizeWindow} isMaximised={this.state.maximized} close={this.closeWindow} id={this.id} compactLayout={isCompactLayout} />
                     {(this.id === "settings"
-                        ? <Settings changeBackgroundImage={this.props.changeBackgroundImage} currBgImgName={this.props.bg_image_name} />
+                        ? <Settings changeBackgroundImage={this.props.changeBackgroundImage} currBgImgName={this.props.bg_image_name} openApp={this.props.openApp} />
                         : <WindowMainScreen screen={this.props.screen} title={this.props.title}
                             addFolder={this.props.id === "terminal" ? this.props.addFolder : null}
                             openApp={this.props.openApp} />)}

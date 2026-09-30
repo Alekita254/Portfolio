@@ -19,27 +19,66 @@ function renderShellList(items) {
   return renderList(items).map((item) => `  ${item}`);
 }
 
+const CONTENT_MANAGER_PASSWORD = 'Alem@1234';
+
 export function Terminal({ openApp }) {
   const [directory, setDirectory] = useState('~');
   const [inputValue, setInputValue] = useState('');
   const [history, setHistory] = useState([]);
   const [historyIndex, setHistoryIndex] = useState(-1);
   const [rows, setRows] = useState([]);
+  const [sudoSession, setSudoSession] = useState({ awaitingPassword: false, attempts: 0 });
 
   const commandHints = useMemo(() => {
+    if (sudoSession.awaitingPassword) return [];
     if (!inputValue.trim()) return [];
     const query = inputValue.trim().toLowerCase();
     return ALL_COMMANDS.filter((cmd) => cmd.startsWith(query)).slice(0, 4);
-  }, [inputValue]);
+  }, [inputValue, sudoSession.awaitingPassword]);
 
   const appendRow = (command, outputLines = [], promptDirectory = directory) => {
     setRows((prev) => [...prev, { id: `${Date.now()}-${prev.length}`, command, outputLines, promptDirectory }]);
+  };
+
+  const cancelSudoPrompt = () => {
+    if (!sudoSession.awaitingPassword) return;
+    appendRow('^C', ['Authentication cancelled.']);
+    setSudoSession({ awaitingPassword: false, attempts: 0 });
+    setInputValue('');
+  };
+
+  const handleContentManagerPassword = (passwordInput) => {
+    const expectedPassword = CONTENT_MANAGER_PASSWORD;
+    const isValid = passwordInput === expectedPassword;
+
+    if (isValid) {
+      appendRow('********', [
+        'Authentication successful.',
+        `Profile: ${portfolioContent.profile.name} • ${portfolioContent.profile.title}`,
+        `Content snapshot: ${portfolioContent.projects.length} projects, ${portfolioContent.experience.length} experience entries.`,
+        'Launching Content Manager...',
+      ]);
+      setSudoSession({ awaitingPassword: false, attempts: 0 });
+      openApp('content');
+      return;
+    }
+
+    const nextAttempts = sudoSession.attempts + 1;
+    if (nextAttempts >= 3) {
+      appendRow('********', ['sudo: 3 incorrect password attempts', 'Access denied.']);
+      setSudoSession({ awaitingPassword: false, attempts: 0 });
+      return;
+    }
+
+    appendRow('********', [`Sorry, try again. (${nextAttempts}/3)`, `[sudo] password for ${identity.userName}:`]);
+    setSudoSession({ awaitingPassword: true, attempts: nextAttempts });
   };
 
   const runCommand = (rawCommand) => {
     const command = rawCommand.trim();
     const [main, ...args] = command.split(/\s+/);
     const cmd = (main || '').toLowerCase();
+    const normalizedCommand = command.toLowerCase().replace(/\s+/g, ' ').trim();
 
     if (!cmd) return;
 
@@ -53,6 +92,7 @@ export function Terminal({ openApp }) {
         'Available commands:',
         'apps: about, projects, experience, writing, resume, contact, settings',
         'shell: help, whoami, ls, pwd, cd <directory>, cat <topic>, history, clear',
+        `secure: sudo ${identity.userName} content management`,
         'easter egg: sudo hire-alex',
       ]);
       return;
@@ -127,6 +167,17 @@ export function Terminal({ openApp }) {
       return;
     }
 
+    if (cmd === 'sudo' && normalizedCommand === `sudo ${identity.userName.toLowerCase()} content management`) {
+      appendRow(command, [`[sudo] password for ${identity.userName}:`]);
+      setSudoSession({ awaitingPassword: true, attempts: 0 });
+      return;
+    }
+
+    if (cmd === 'sudo') {
+      appendRow(command, ['sudo: command not permitted', `Use: sudo ${identity.userName} content management`]);
+      return;
+    }
+
     if (cmd === 'cv') {
       openApp('resume');
       appendRow(command, ['Opening Resume...']);
@@ -143,8 +194,22 @@ export function Terminal({ openApp }) {
   };
 
   const submitCommand = () => {
-    const trimmed = inputValue.trim();
+    const rawInput = inputValue;
+    const trimmed = rawInput.trim();
     if (!trimmed) return;
+
+    if (sudoSession.awaitingPassword) {
+      const passwordControl = trimmed.toLowerCase();
+      if (passwordControl === 'exit' || passwordControl === 'cancel') {
+        cancelSudoPrompt();
+        return;
+      }
+
+      setHistoryIndex(-1);
+      handleContentManagerPassword(rawInput);
+      setInputValue('');
+      return;
+    }
 
     setHistory((prev) => [...prev, trimmed]);
     setHistoryIndex(-1);
@@ -162,6 +227,18 @@ export function Terminal({ openApp }) {
   };
 
   const onKeyDown = (event) => {
+    if (sudoSession.awaitingPassword && event.key === 'Escape') {
+      event.preventDefault();
+      cancelSudoPrompt();
+      return;
+    }
+
+    if (sudoSession.awaitingPassword && event.ctrlKey && event.key.toLowerCase() === 'c') {
+      event.preventDefault();
+      cancelSudoPrompt();
+      return;
+    }
+
     if (event.key === 'Enter') {
       event.preventDefault();
       submitCommand();
@@ -175,6 +252,7 @@ export function Terminal({ openApp }) {
     }
 
     if (event.key === 'ArrowUp') {
+      if (sudoSession.awaitingPassword) return;
       event.preventDefault();
       if (!history.length) return;
 
@@ -185,6 +263,7 @@ export function Terminal({ openApp }) {
     }
 
     if (event.key === 'ArrowDown') {
+      if (sudoSession.awaitingPassword) return;
       event.preventDefault();
       if (!history.length) return;
 
@@ -229,7 +308,9 @@ export function Terminal({ openApp }) {
           <div className="flex-1">
             <input
               aria-label="Terminal command input"
+              type={sudoSession.awaitingPassword ? 'password' : 'text'}
               className="w-full bg-transparent border-none outline-none text-white"
+              placeholder={sudoSession.awaitingPassword ? 'Enter password or type cancel' : ''}
               value={inputValue}
               onChange={(event) => setInputValue(event.target.value)}
               onKeyDown={onKeyDown}

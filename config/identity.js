@@ -1,4 +1,6 @@
-const identity = {
+import { mergeContentValue, readContentBundle } from "../content/runtime";
+
+const defaultIdentity = {
   name: "Alex Murimi",
   legalName: "Alex Murimi Kariuki",
   userName: "alex",
@@ -22,5 +24,9 @@ const identity = {
     siteDescription: "Alex Murimi is a senior backend engineer focused on Python, Go, distributed systems, performance engineering, cloud-native architecture, and real-world business systems.",
   },
 };
+
+const identity = mergeContentValue(defaultIdentity, readContentBundle()?.identity);
+
+export const identityDefaults = defaultIdentity;
 
 export default identity;
