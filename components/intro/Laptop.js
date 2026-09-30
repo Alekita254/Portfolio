@@ -145,7 +145,7 @@ export default function Laptop({ phase, onActivate, disabled }) {
         (disabled
           ? 'cursor-default '
           : 'cursor-pointer focus-visible:ring-2 focus-visible:ring-emerald-300 focus-visible:ring-offset-2 focus-visible:ring-offset-black ') +
-        'lp-btn group relative block w-[18rem] sm:w-[24rem] md:w-[28rem] xl:w-[33rem] outline-none'
+        'lp-btn group relative block w-[14rem] max-w-[92vw] sm:w-[18rem] md:w-[24rem] xl:w-[33rem] outline-none'
       }
     >
       <div className="lp-root" data-phase={phase}>

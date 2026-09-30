@@ -26,7 +26,7 @@ export default function SideBar(props) {
 
     return (
         <>
-            <div className={(props.hide ? " -translate-x-full " : "") + " absolute transform duration-300 select-none z-40 left-0 top-0 h-full pt-7 w-auto flex flex-col justify-start items-center border-black border-opacity-60 bg-black bg-opacity-50"}>
+            <div className={(props.hide ? " lg:-translate-x-full " : "") + " absolute transform duration-300 select-none z-40 left-0 right-0 bottom-0 h-16 px-2 flex flex-row justify-start items-center overflow-x-auto border-t border-black border-opacity-60 bg-black bg-opacity-70 backdrop-blur-sm lg:left-0 lg:top-0 lg:right-auto lg:bottom-auto lg:h-full lg:w-auto lg:px-0 lg:pt-7 lg:overflow-visible lg:border-t-0 lg:border-r lg:bg-black lg:bg-opacity-50 lg:flex-col"}>
                 {
                     (
                         Object.keys(props.closed_windows).length !== 0
@@ -36,7 +36,7 @@ export default function SideBar(props) {
                 }
                 <AllApps showApps={props.showAllApps} />
             </div>
-            <div onMouseEnter={showSideBar} onMouseLeave={hideSideBar} className={"w-1 h-full absolute top-0 left-0 bg-transparent z-50"}></div>
+            <div onMouseEnter={showSideBar} onMouseLeave={hideSideBar} className={"hidden lg:block w-1 h-full absolute top-0 left-0 bg-transparent z-50"}></div>
         </>
     )
 }
@@ -47,8 +47,7 @@ export function AllApps(props) {
 
     return (
         <div
-            className={`w-10 h-10 rounded m-1 hover:bg-white hover:bg-opacity-10 flex items-center justify-center`}
-            style={{ marginTop: 'auto' }}
+            className={`w-11 h-11 rounded m-1 hover:bg-white hover:bg-opacity-10 flex items-center justify-center lg:mt-auto`}
             onMouseEnter={() => {
                 setTitle(true);
             }}
@@ -62,7 +61,7 @@ export function AllApps(props) {
                 <div
                     className={
                         (title ? " visible " : " invisible ") +
-                        " w-max py-0.5 px-1.5 absolute top-1 left-full ml-5 text-ubt-grey text-opacity-90 text-sm bg-ub-grey bg-opacity-70 border-gray-400 border border-opacity-40 rounded-md"
+                        " hidden lg:block w-max py-0.5 px-1.5 absolute top-1 left-full ml-5 text-ubt-grey text-opacity-90 text-sm bg-ub-grey bg-opacity-70 border-gray-400 border border-opacity-40 rounded-md"
                     }
                 >
                     Alex OS Applications

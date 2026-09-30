@@ -218,7 +218,7 @@ export default function WorkspaceScene({ phase, reducedMotion, onActivate, onSki
           <div className="absolute bottom-[21.5%] left-1/2 z-[5] h-[6%] w-[30%] -translate-x-1/2 rounded-full bg-[radial-gradient(circle,rgba(0,0,0,0.6),rgba(0,0,0,0.22)_54%,transparent_76%)] blur-xl"></div>
           {/* faint glossy reflection of the laptop base on the desk */}
           <div className="pointer-events-none absolute bottom-[19%] left-1/2 z-[5] h-[3%] w-[26%] -translate-x-1/2 bg-[linear-gradient(180deg,rgba(200,205,215,0.12),transparent)] blur-md"></div>
-          <div className="absolute bottom-[28%] left-1/2 z-10 -translate-x-1/2 translate-y-1/2 md:bottom-[27%] md:translate-y-0">
+          <div className="absolute bottom-[30%] left-1/2 z-10 -translate-x-1/2 translate-y-1/2 sm:bottom-[28%] md:bottom-[27%] md:translate-y-0">
             <Laptop phase={phase} onActivate={onActivate} disabled={phase !== 'workspace'} />
           </div>
         </div>

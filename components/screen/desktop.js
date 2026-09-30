@@ -361,7 +361,7 @@ export class Desktop extends Component {
         if (!this.state.notifications.length) return null;
 
         return (
-            <div className="absolute right-4 top-12 z-50 flex w-72 flex-col gap-2 pointer-events-none">
+            <div className="absolute right-4 top-12 z-50 flex w-[calc(100vw-2rem)] max-w-72 flex-col gap-2 pointer-events-none">
                 {this.state.notifications.map((item) => (
                     <div key={item.id} className="notification-toast rounded border border-white border-opacity-20 bg-black bg-opacity-70 px-3 py-2 text-sm text-gray-100 shadow-lg">
                         <div className="text-xs uppercase tracking-[0.2em] text-gray-300">{item.title}</div>
@@ -378,7 +378,7 @@ export class Desktop extends Component {
             <div className="absolute inset-0 z-50 flex items-center justify-center bg-black bg-opacity-40 px-4" role="dialog" aria-modal="true" aria-label="Keyboard Shortcuts">
                 <div className="w-full max-w-lg rounded border border-white border-opacity-20 bg-ub-grey p-4 text-white shadow-xl">
                     <div className="text-xs uppercase tracking-[0.24em] text-gray-400">Keyboard Shortcuts</div>
-                    <div className="mt-3 space-y-3 text-sm">
+                    <div className="mt-3 space-y-3 text-sm max-h-[70vh] overflow-y-auto">
                         <div className="flex items-center justify-between border-b border-white border-opacity-10 pb-2">
                             <span>Open application launcher</span>
                             <span className="text-gray-300">Ctrl/Cmd + K</span>
@@ -657,7 +657,7 @@ export class Desktop extends Component {
 
     render() {
         return (
-            <div className={" h-full w-full pt-8 bg-transparent relative overflow-hidden overscroll-none window-parent"}>
+            <div className={" h-full w-full pt-8 pb-16 lg:pb-0 bg-transparent relative overflow-hidden overscroll-none window-parent"}>
 
                 {/* Window Area */}
                 <div className="absolute h-full w-full bg-transparent" data-context="desktop-area">
@@ -680,7 +680,7 @@ export class Desktop extends Component {
                     openAppByAppId={this.openApp} />
 
                 {/* Desktop Apps */}
-                <div className="absolute right-3 top-11 z-10 flex flex-col items-end gap-y-1">
+                <div className="absolute right-3 top-11 z-10 hidden lg:flex flex-col items-end gap-y-1">
                     {this.renderDesktopApps()}
                 </div>
 
@@ -706,7 +706,7 @@ export class Desktop extends Component {
                 {this.renderNotifications()}
 
                 {this.app_stack.length === 0 ? (
-                    <div className="absolute bottom-4 left-1/2 z-10 -translate-x-1/2 rounded border border-white border-opacity-10 bg-black bg-opacity-40 px-3 py-1.5 text-xs text-gray-300">
+                    <div className="absolute bottom-20 lg:bottom-4 left-1/2 z-10 -translate-x-1/2 rounded border border-white border-opacity-10 bg-black bg-opacity-40 px-3 py-1.5 text-xs text-gray-300">
                         No applications open.
                     </div>
                 ) : null}

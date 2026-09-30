@@ -153,12 +153,12 @@ export class StatusCard extends Component {
             <div
                 ref={this.wrapperRef}
                 className={
-                    'absolute bg-ub-cool-grey rounded-md py-4 top-9 right-3 shadow border-black border border-opacity-20 status-card' +
+                    'absolute bg-ub-cool-grey rounded-md py-4 top-9 right-2 sm:right-3 shadow border-black border border-opacity-20 status-card w-[min(92vw,16rem)] sm:w-64' +
                     (this.props.visible ? ' visible animateShow' : ' invisible')
                 }
             >
                 <div className="absolute w-0 h-0 -top-1 right-6 top-arrow-up" />
-                <div className="w-64 py-1.5 flex items-center justify-center bg-ub-cool-grey hover:bg-ub-warm-grey hover:bg-opacity-20">
+                <div className="w-full py-1.5 flex items-center justify-center bg-ub-cool-grey hover:bg-ub-warm-grey hover:bg-opacity-20">
                     <div className="w-8">
                         <img width="16px" height="16px" src="./themes/Yaru/status/audio-headphones-symbolic.svg" alt="ubuntu headphone" />
                     </div>
@@ -169,7 +169,7 @@ export class StatusCard extends Component {
                         name="headphone_range"
                     />
                 </div>
-                <div className="w-64 py-1.5 flex items-center justify-center bg-ub-cool-grey hover:bg-ub-warm-grey hover:bg-opacity-20">
+                <div className="w-full py-1.5 flex items-center justify-center bg-ub-cool-grey hover:bg-ub-warm-grey hover:bg-opacity-20">
                     <div className="w-8">
                         <img width="16px" height="16px" src="./themes/Yaru/status/display-brightness-symbolic.svg" alt="ubuntu brightness" />
                     </div>
@@ -180,11 +180,11 @@ export class StatusCard extends Component {
                         value={this.state.brightness_level}
                     />
                 </div>
-                <div className="w-64 flex content-center justify-center">
+                <div className="w-full flex content-center justify-center">
                     <div className="w-2/4 border-black border-opacity-50 border-b my-2 border-solid" />
                 </div>
                 {/* Updated Battery Section with real battery info */}
-                <div className="w-64 py-1.5 flex items-center justify-center bg-ub-cool-grey hover:bg-ub-warm-grey hover:bg-opacity-20">
+                <div className="w-full py-1.5 flex items-center justify-center bg-ub-cool-grey hover:bg-ub-warm-grey hover:bg-opacity-20">
                     <div className="w-8">
                         <img width="16px" height="16px" src="./themes/Yaru/status/battery-good-symbolic.svg" alt="ubuntu battery" />
                     </div>
@@ -193,13 +193,13 @@ export class StatusCard extends Component {
                         <SmallArrow angle="right" />
                     </div>
                 </div>
-                <div className="w-64 flex content-center justify-center">
+                <div className="w-full flex content-center justify-center">
                     <div className="w-2/4 border-black border-opacity-50 border-b my-2 border-solid" />
                 </div>
-                <div className="w-64 px-5 py-1 text-[11px] uppercase tracking-[0.2em] text-gray-400">System</div>
+                <div className="w-full px-5 py-1 text-[11px] uppercase tracking-[0.2em] text-gray-400">System</div>
                 <div
                     onClick={() => dispatchDesktopAction('about-system')}
-                    className="w-64 py-1.5 flex items-center justify-center bg-ub-cool-grey hover:bg-ub-warm-grey hover:bg-opacity-20"
+                    className="w-full py-1.5 flex items-center justify-center bg-ub-cool-grey hover:bg-ub-warm-grey hover:bg-opacity-20"
                 >
                     <div className="w-8">
                         <img width="16px" height="16px" src="./themes/Yaru/status/about.svg" alt="system info" />
@@ -210,7 +210,7 @@ export class StatusCard extends Component {
                 </div>
                 <div
                     onClick={() => dispatchDesktopAction('show-shortcuts')}
-                    className="w-64 py-1.5 flex items-center justify-center bg-ub-cool-grey hover:bg-ub-warm-grey hover:bg-opacity-20"
+                    className="w-full py-1.5 flex items-center justify-center bg-ub-cool-grey hover:bg-ub-warm-grey hover:bg-opacity-20"
                 >
                     <div className="w-8">
                         <img width="16px" height="16px" src="./themes/Yaru/status/skills.svg" alt="keyboard shortcuts" />
@@ -221,7 +221,7 @@ export class StatusCard extends Component {
                 </div>
                 <div
                     id="open-settings"
-                    className="w-64 py-1.5 flex items-center justify-center bg-ub-cool-grey hover:bg-ub-warm-grey hover:bg-opacity-20"
+                    className="w-full py-1.5 flex items-center justify-center bg-ub-cool-grey hover:bg-ub-warm-grey hover:bg-opacity-20"
                 >
                     <div className="w-8">
                         <img width="16px" height="16px" src="./themes/Yaru/status/emblem-system-symbolic.svg" alt="ubuntu settings" />
@@ -232,7 +232,7 @@ export class StatusCard extends Component {
                 </div>
                 <div
                     onClick={() => dispatchDesktopAction('restart-experience')}
-                    className="w-64 py-1.5 flex items-center justify-center bg-ub-cool-grey hover:bg-ub-warm-grey hover:bg-opacity-20"
+                    className="w-full py-1.5 flex items-center justify-center bg-ub-cool-grey hover:bg-ub-warm-grey hover:bg-opacity-20"
                 >
                     <div className="w-8">
                         <img width="16px" height="16px" src="./themes/Yaru/status/chrome_refresh.svg" alt="restart experience" />
@@ -243,7 +243,7 @@ export class StatusCard extends Component {
                 </div>
                 <div
                     onClick={() => dispatchDesktopAction('skip-intro')}
-                    className="w-64 py-1.5 flex items-center justify-center bg-ub-cool-grey hover:bg-ub-warm-grey hover:bg-opacity-20"
+                    className="w-full py-1.5 flex items-center justify-center bg-ub-cool-grey hover:bg-ub-warm-grey hover:bg-opacity-20"
                 >
                     <div className="w-8">
                         <img width="16px" height="16px" src="./themes/Yaru/status/projects.svg" alt="skip intro" />
@@ -254,7 +254,7 @@ export class StatusCard extends Component {
                 </div>
                 <div
                     onClick={this.props.lockScreen}
-                    className="w-64 py-1.5 flex items-center justify-center bg-ub-cool-grey hover:bg-ub-warm-grey hover:bg-opacity-20"
+                    className="w-full py-1.5 flex items-center justify-center bg-ub-cool-grey hover:bg-ub-warm-grey hover:bg-opacity-20"
                 >
                     <div className="w-8">
                         <img width="16px" height="16px" src="./themes/Yaru/status/changes-prevent-symbolic.svg" alt="ubuntu lock" />
@@ -265,7 +265,7 @@ export class StatusCard extends Component {
                 </div>
                 <div
                     onClick={this.props.shutDown}
-                    className="w-64 py-1.5 flex items-center justify-center bg-ub-cool-grey hover:bg-ub-warm-grey hover:bg-opacity-20"
+                    className="w-full py-1.5 flex items-center justify-center bg-ub-cool-grey hover:bg-ub-warm-grey hover:bg-opacity-20"
                 >
                     <div className="w-8">
                         <img width="16px" height="16px" src="./themes/Yaru/status/system-shutdown-symbolic.svg" alt="ubuntu power" />

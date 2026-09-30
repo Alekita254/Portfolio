@@ -48,7 +48,7 @@ export class SideBarApp extends Component {
                 onMouseLeave={() => {
                     this.setState({ showTitle: false });
                 }}
-                className={(this.props.isClose[this.id] === false && this.props.isFocus[this.id] ? "bg-white bg-opacity-10 " : "") + " w-auto p-2 outline-none relative transition hover:bg-white hover:bg-opacity-10 rounded m-1"}
+                className={(this.props.isClose[this.id] === false && this.props.isFocus[this.id] ? "bg-white bg-opacity-10 " : "") + " w-auto p-2.5 outline-none relative transition hover:bg-white hover:bg-opacity-10 rounded m-1 shrink-0"}
                 id={"sidebar-" + this.props.id}
                 role="button"
                 aria-label={this.props.title}
@@ -58,14 +58,14 @@ export class SideBarApp extends Component {
                 {
                     (
                         this.props.isClose[this.id] === false
-                            ? <div className=" w-1 h-1 absolute left-0 top-1/2 bg-ub-orange rounded-sm"></div>
+                            ? <div className="absolute bottom-0 left-1/2 h-1 w-4 -translate-x-1/2 rounded-sm bg-ub-orange lg:left-0 lg:top-1/2 lg:h-1 lg:w-1 lg:-translate-x-0 lg:-translate-y-1/2"></div>
                             : null
                     )
                 }
                 <div
                     className={
                         (this.state.showTitle ? " visible " : " invisible ") +
-                        " w-max py-0.5 px-1.5 absolute top-1.5 left-full ml-3 m-1 text-ubt-grey text-opacity-90 text-sm bg-ub-grey bg-opacity-70 border-gray-400 border border-opacity-40 rounded-md"
+                        " hidden lg:block w-max py-0.5 px-1.5 absolute top-1.5 left-full ml-3 m-1 text-ubt-grey text-opacity-90 text-sm bg-ub-grey bg-opacity-70 border-gray-400 border border-opacity-40 rounded-md"
                     }
                 >
                     {this.props.title}

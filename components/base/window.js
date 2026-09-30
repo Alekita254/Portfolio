@@ -8,14 +8,13 @@ export class Window extends Component {
     constructor() {
         super();
         this.id = null;
-        this.startX = 60;
-        this.startY = 10;
         this.state = {
             cursorType: "cursor-default",
             width: 60,
             height: 85,
             closed: false,
             maximized: false,
+            compactLayout: false,
             parentSize: {
                 height: 100,
                 width: 100
@@ -31,22 +30,63 @@ export class Window extends Component {
         ReactGA.send({ hitType: "pageview", page: `/${this.id}`, title: "Custom Title" });
 
         // on window resize, resize boundary
-        window.addEventListener('resize', this.resizeBoundries);
+        window.addEventListener('resize', this.handleResize);
     }
 
     componentWillUnmount() {
         ReactGA.send({ hitType: "pageview", page: "/desktop", title: "Custom Title" });
 
-        window.removeEventListener('resize', this.resizeBoundries);
+        window.removeEventListener('resize', this.handleResize);
+    }
+
+    handleResize = () => {
+        this.setDefaultWindowDimenstion();
     }
 
     setDefaultWindowDimenstion = () => {
-        if (window.innerWidth < 640) {
-            this.setState({ height: 60, width: 85 }, this.resizeBoundries);
+        if (window.innerWidth < 768) {
+            this.setState({ height: 84, width: 100, compactLayout: true }, this.resizeBoundries);
+        }
+        else if (window.innerWidth < 1024) {
+            this.setState({ height: 88, width: 96, compactLayout: true }, this.resizeBoundries);
         }
         else {
-            this.setState({ height: 85, width: 60 }, this.resizeBoundries);
+            this.setState({ height: 85, width: 60, compactLayout: false }, this.resizeBoundries);
         }
+    }
+
+    getDefaultPosition = () => {
+        if (this.state.compactLayout || typeof window === 'undefined') {
+            return { x: 0, y: 0 };
+        }
+
+        const windowWidth = window.innerWidth;
+        const windowHeight = window.innerHeight;
+        const windowPixelWidth = windowWidth * (this.state.width / 100.0);
+        const windowPixelHeight = windowHeight * (this.state.height / 100.0);
+
+        return {
+            x: Math.max((windowWidth - windowPixelWidth) / 2, 24),
+            y: Math.max((windowHeight - windowPixelHeight) / 2 - 12, 24),
+        };
+    }
+
+    getWindowStyle = () => {
+        const isCompactLayout = this.state.compactLayout;
+
+        return isCompactLayout
+            ? {
+                width: '100%',
+                height: 'calc(100% - 4.5rem)',
+                top: '2rem',
+                left: 0,
+            }
+            : {
+                width: `${this.state.width}%`,
+                height: `${this.state.height}%`,
+                left: 0,
+                top: 0,
+            };
     }
 
     resizeBoundries = () => {
@@ -64,6 +104,9 @@ export class Window extends Component {
 
     changeCursorToMove = () => {
         this.focusWindow();
+        if (this.state.compactLayout) {
+            return;
+        }
         if (this.state.maximized) {
             this.restoreWindow();
         }
@@ -105,6 +148,11 @@ export class Window extends Component {
     }
 
     minimizeWindow = () => {
+        if (this.state.compactLayout) {
+            this.props.hasMinimised(this.id);
+            return;
+        }
+
         let posx = -310;
         if (this.state.maximized) {
             posx = -510;
@@ -135,6 +183,10 @@ export class Window extends Component {
     }
 
     maximizeWindow = () => {
+        if (this.state.compactLayout) {
+            return;
+        }
+
         if (this.state.maximized) {
             this.restoreWindow();
         }
@@ -160,28 +212,32 @@ export class Window extends Component {
     }
 
     render() {
+        const isCompactLayout = this.state.compactLayout;
+        const windowStyle = this.getWindowStyle();
+
         return (
             <Draggable
                 axis="both"
                 handle=".bg-ub-window-title"
                 grid={[1, 1]}
                 scale={1}
+                disabled={isCompactLayout}
                 onStart={this.changeCursorToMove}
                 onStop={this.changeCursorToDefault}
                 onDrag={this.checkOverlap}
                 allowAnyClick={false}
-                defaultPosition={{ x: this.startX, y: this.startY }}
+                defaultPosition={isCompactLayout ? { x: 0, y: 0 } : this.getDefaultPosition()}
                 bounds={{ left: 0, top: 0, right: this.state.parentSize.width, bottom: this.state.parentSize.height }}
             >
-                <div style={{ width: `${this.state.width}%`, height: `${this.state.height}%` }}
-                    className={this.state.cursorType + " " + (this.state.closed ? " closed-window " : "") + (this.state.maximized ? " duration-200 rounded-none" : " rounded-lg rounded-b-none") + (this.props.minimized ? " opacity-0 invisible duration-150 " : "") + (this.props.isFocused ? " z-30 focused-window " : " z-20 notFocused") + " opened-window overflow-hidden min-w-1/4 min-h-1/4 main-window absolute window-shadow border-black border-opacity-40 border border-t-0 flex flex-col transition-all"}
+                <div style={windowStyle}
+                    className={this.state.cursorType + " " + (this.state.closed ? " closed-window " : "") + (this.state.maximized || isCompactLayout ? " duration-200 rounded-none" : " rounded-lg rounded-b-none") + (this.props.minimized ? " opacity-0 invisible duration-150 " : "") + (this.props.isFocused ? " z-30 focused-window " : " z-20 notFocused") + " opened-window overflow-hidden min-w-1/4 min-h-1/4 main-window absolute window-shadow border-black border-opacity-40 border border-t-0 flex flex-col transition-all" + (isCompactLayout ? " mobile-os-window border-x-0 border-b-0" : "")}
                     id={this.id}
                     onMouseDown={this.focusWindow}
                 >
-                    <WindowYBorder resize={this.handleHorizontalResize} />
-                    <WindowXBorder resize={this.handleVerticleResize} />
+                    {!isCompactLayout ? <WindowYBorder resize={this.handleHorizontalResize} /> : null}
+                    {!isCompactLayout ? <WindowXBorder resize={this.handleVerticleResize} /> : null}
                     <WindowTopBar title={this.props.title} />
-                    <WindowEditButtons minimize={this.minimizeWindow} maximize={this.maximizeWindow} isMaximised={this.state.maximized} close={this.closeWindow} id={this.id} />
+                    <WindowEditButtons minimize={this.minimizeWindow} maximize={this.maximizeWindow} isMaximised={this.state.maximized} close={this.closeWindow} id={this.id} compactLayout={isCompactLayout} />
                     {(this.id === "settings"
                         ? <Settings changeBackgroundImage={this.props.changeBackgroundImage} currBgImgName={this.props.bg_image_name} />
                         : <WindowMainScreen screen={this.props.screen} title={this.props.title}
@@ -198,8 +254,8 @@ export default Window
 // Window's title bar
 export function WindowTopBar(props) {
     return (
-        <div className={" relative bg-ub-window-title border-t-2 border-white border-opacity-5 py-1.5 px-3 text-white w-full select-none rounded-b-none"}>
-            <div className="flex justify-center text-sm font-bold">{props.title}</div>
+        <div className={" relative bg-ub-window-title border-t-2 border-white border-opacity-5 py-2 px-3 text-white w-full select-none rounded-b-none"}>
+            <div className="flex justify-center text-sm font-bold truncate px-16">{props.title}</div>
         </div>
     )
 }
@@ -237,7 +293,7 @@ export class WindowXBorder extends Component {
 export function WindowEditButtons(props) {
     return (
         <div className="absolute select-none right-0 top-0 mt-1 mr-1 flex justify-center items-center">
-            <span className="mx-1.5 bg-white bg-opacity-0 hover:bg-opacity-10 rounded-full flex justify-center mt-1 h-5 w-5 items-center" onClick={props.minimize}>
+            <span className="mx-1 bg-white bg-opacity-0 hover:bg-opacity-10 rounded-full flex justify-center mt-1 h-7 w-7 items-center" onClick={props.minimize}>
                 <img
                     src="./themes/Yaru/window/window-minimize-symbolic.svg"
                     alt="ubuntu window minimize"
@@ -245,26 +301,27 @@ export function WindowEditButtons(props) {
                 />
             </span>
             {
-                (props.isMaximised
+                (!props.compactLayout && props.isMaximised
                     ?
-                    <span className="mx-2 bg-white bg-opacity-0 hover:bg-opacity-10 rounded-full flex justify-center mt-1 h-5 w-5 items-center" onClick={props.maximize}>
+                    <span className="mx-1 bg-white bg-opacity-0 hover:bg-opacity-10 rounded-full flex justify-center mt-1 h-7 w-7 items-center" onClick={props.maximize}>
                         <img
                             src="./themes/Yaru/window/window-restore-symbolic.svg"
                             alt="ubuntu window restore"
                             className="h-5 w-5 inline"
                         />
                     </span>
-                    :
-                    <span className="mx-2 bg-white bg-opacity-0 hover:bg-opacity-10 rounded-full flex justify-center mt-1 h-5 w-5 items-center" onClick={props.maximize}>
+                    : !props.compactLayout
+                    ? <span className="mx-1 bg-white bg-opacity-0 hover:bg-opacity-10 rounded-full flex justify-center mt-1 h-7 w-7 items-center" onClick={props.maximize}>
                         <img
                             src="./themes/Yaru/window/window-maximize-symbolic.svg"
                             alt="ubuntu window maximize"
                             className="h-5 w-5 inline"
                         />
                     </span>
+                    : null
                 )
             }
-            <button tabIndex="-1" id={`close-${props.id}`} className="mx-1.5 focus:outline-none cursor-default bg-ub-orange bg-opacity-90 hover:bg-opacity-100 rounded-full flex justify-center mt-1 h-5 w-5 items-center" onClick={props.close}>
+            <button tabIndex="-1" id={`close-${props.id}`} className="mx-1 focus:outline-none cursor-default bg-ub-orange bg-opacity-90 hover:bg-opacity-100 rounded-full flex justify-center mt-1 h-7 w-7 items-center" onClick={props.close}>
                 <img
                     src="./themes/Yaru/window/window-close-symbolic.svg"
                     alt="ubuntu window close"

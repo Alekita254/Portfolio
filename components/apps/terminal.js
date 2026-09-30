@@ -15,6 +15,10 @@ function renderList(items) {
   return items;
 }
 
+function renderShellList(items) {
+  return renderList(items).map((item) => `  ${item}`);
+}
+
 export function Terminal({ openApp }) {
   const [directory, setDirectory] = useState('~');
   const [inputValue, setInputValue] = useState('');
@@ -64,7 +68,7 @@ export function Terminal({ openApp }) {
     }
 
     if (cmd === 'ls') {
-      appendRow(command, ['about  projects  experience  writing  resume  contact  terminal  settings']);
+      appendRow(command, renderShellList(['about', 'projects', 'experience', 'writing', 'resume', 'contact', 'terminal', 'settings']));
       return;
     }
 
@@ -105,7 +109,7 @@ export function Terminal({ openApp }) {
       }
 
       if (target === 'projects') {
-        appendRow(command, renderList(portfolioContent.projects.map((project) => project.name)));
+        appendRow(command, renderShellList(portfolioContent.projects.map((project) => project.name)));
         return;
       }
 
@@ -211,7 +215,7 @@ export function Terminal({ openApp }) {
               <span className="break-all">{row.command}</span>
             </div>
             {row.outputLines.length > 0 ? (
-              <div className="pl-1 mt-1 text-gray-200 space-y-1">
+              <div className="pl-1 mt-1 font-mono text-gray-200 space-y-1 whitespace-pre-wrap">
                 {row.outputLines.map((line, idx) => (
                   <div key={`${row.id}-${idx}`} className="break-words">{line}</div>
                 ))}
@@ -234,7 +238,7 @@ export function Terminal({ openApp }) {
               autoFocus
             />
             {commandHints.length > 0 ? (
-              <div className="mt-1 max-w-md rounded border border-white border-opacity-20 bg-black bg-opacity-45 py-1 text-xs text-gray-300">
+              <div className="mt-1 max-w-md rounded border border-white border-opacity-20 bg-black bg-opacity-45 py-1 font-mono text-xs text-gray-300">
                 {commandHints.map((hint) => (
                   <div key={hint} className="px-2 py-1 hover:bg-white hover:bg-opacity-10">
                     {hint}
