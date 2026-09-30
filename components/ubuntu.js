@@ -33,6 +33,8 @@ export default class Ubuntu extends Component {
 	};
 
 	componentDidMount() {
+		const motionPreference = localStorage.getItem('alex-os-motion') || 'system';
+		document.documentElement.setAttribute('data-motion', motionPreference);
 		this.getLocalData();
 	}
 

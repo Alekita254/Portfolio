@@ -70,15 +70,16 @@ export class AllApplications extends React.Component {
         return (
             <div className="absolute top-7 h-full w-full z-20 border-black border-opacity-60 bg-black bg-opacity-85 px-4 md:px-10 xl:px-20">
                 <div className="pt-5 text-center text-white">
-                    <div className="text-xs uppercase tracking-[0.25em] text-gray-400">{identity.osName}</div>
-                    <div className="mt-2 text-xl font-semibold">Alex OS Applications</div>
+                    <div className="text-xs uppercase tracking-[0.25em] text-gray-400">Applications</div>
+                    <div className="mt-2 text-xl font-semibold">Alex's workspace</div>
+                    <div className="mt-1 text-xs text-gray-400">{identity.terminalPersona}</div>
                 </div>
                 <div className="flex justify-center pt-5">
                     <div className="flex h-full w-full max-w-2xl items-center overflow-hidden rounded-xl border-black bg-white bg-opacity-95 pl-2 pr-2 md:w-2/3">
                         <img className="h-5 w-5" alt="search icon" src={'./images/logos/search.png'} />
                         <input
                             className="w-full bg-transparent p-2 text-black focus:outline-none"
-                            placeholder="Search Alex Murimi's applications"
+                            placeholder="Search applications..."
                             value={this.state.query}
                             onChange={this.handleChange}
                             aria-label="Search Alex OS applications"

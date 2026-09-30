@@ -20,8 +20,9 @@ export class UbuntuApp extends Component {
     render() {
         return (
             <div
-                className={"p-1 m-px z-10 bg-white bg-opacity-0 hover:bg-opacity-20 focus:bg-ub-orange focus:bg-opacity-40 focus:border-yellow-700 focus:border-opacity-100 border border-transparent outline-none rounded select-none flex flex-col justify-start items-center text-center text-xs font-normal text-white relative " + (this.props.showDescription ? "w-full min-h-[7rem] h-auto px-3 py-3 items-start text-left" : "w-24 h-20")}
+                className={"p-1 m-px z-10 bg-white bg-opacity-0 hover:bg-opacity-20 focus:bg-ub-orange focus:bg-opacity-40 focus:border-yellow-700 focus:border-opacity-100 border border-transparent outline-none rounded select-none flex flex-col justify-start items-center text-center text-xs font-normal text-white relative transition " + (this.props.showDescription ? "w-full min-h-[7rem] h-auto px-3 py-3 items-start text-left" : "desktop-icon-card w-24 h-24")}
                 id={"app-" + this.props.id}
+                onClick={(event) => event.currentTarget.focus()}
                 onDoubleClick={this.openApp}
                 onKeyDown={this.handleKeyDown}
                 tabIndex={0}
@@ -29,7 +30,7 @@ export class UbuntuApp extends Component {
                 aria-label={this.props.description ? `${this.props.name}. ${this.props.description}` : this.props.name}
             >
                 <div className={"relative " + (this.props.showDescription ? "flex items-start gap-3 w-full" : "") }>
-                    <img width="40px" height="40px" className="mb-1 w-10" src={this.props.icon} alt={"Alex OS " + this.props.name} />
+                    <img width="40px" height="40px" className={"mb-1 " + (this.props.showDescription ? "w-10" : "w-9 h-9")} src={this.props.icon} alt={"Alex OS " + this.props.name} />
                     {this.props.isExternalApp && (
                         <img 
                             src="./themes/Yaru/status/arrow-up-right.svg" 
@@ -44,7 +45,7 @@ export class UbuntuApp extends Component {
                         </div>
                     ) : null}
                 </div>
-                {!this.props.showDescription ? this.props.name : null}
+                {!this.props.showDescription ? <span className="mt-1 px-1 leading-4 text-[11px] text-gray-100">{this.props.name}</span> : null}
             </div>
         )
     }

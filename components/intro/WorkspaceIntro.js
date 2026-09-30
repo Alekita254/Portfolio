@@ -15,6 +15,9 @@ export default function WorkspaceIntro() {
       return undefined;
     }
 
+    const persistedMotion = window.localStorage.getItem('alex-os-motion') || 'system';
+    document.documentElement.setAttribute('data-motion', persistedMotion);
+
     setIntroSeen(window.localStorage.getItem(INTRO_SEEN_KEY) === 'true');
 
     const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)');

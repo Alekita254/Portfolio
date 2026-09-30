@@ -35,8 +35,9 @@ export default function Meta() {
             <meta property="og:type" content="website" />
             {canonicalUrl ? <meta property="og:url" content={canonicalUrl} /> : null}
 
-            <link rel="icon" href="images/logos/fevicon.svg" />
-            <link rel="apple-touch-icon" href="images/logos/fevicon.png" />
+            <link rel="icon" href="/images/logos/fevicon.svg" type="image/svg+xml" />
+            <link rel="shortcut icon" href="/favicon.ico" />
+            <link rel="apple-touch-icon" href="/images/logos/fevicon.png" />
         </Head>
     )
 }

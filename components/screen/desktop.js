@@ -9,6 +9,7 @@ import DesktopMenu from '../context menus/desktop-menu';
 import DefaultMenu from '../context menus/default';
 import $ from 'jquery';
 import ReactGA from 'react-ga4';
+import identity from '../../config/identity';
 
 export class Desktop extends Component {
     constructor() {
@@ -31,6 +32,8 @@ export class Desktop extends Component {
                 default: false,
             },
             showNameBar: false,
+            showShortcuts: false,
+            notifications: [],
         }
     }
 
@@ -41,11 +44,17 @@ export class Desktop extends Component {
         this.fetchAppsData();
         this.setContextListeners();
         this.setEventListeners();
+        this.setKeyboardListeners();
+        window.addEventListener('alex-os:desktop-action', this.handleDesktopAction);
         this.checkForNewFolders();
+        this.showNotification(identity.osName, 'Welcome to the workstation.');
     }
 
     componentWillUnmount() {
         this.removeContextListeners();
+        this.removeEventListeners();
+        this.removeKeyboardListeners();
+        window.removeEventListener('alex-os:desktop-action', this.handleDesktopAction);
     }
 
     checkForNewFolders = () => {
@@ -71,9 +80,104 @@ export class Desktop extends Component {
     }
 
     setEventListeners = () => {
-        document.getElementById("open-settings").addEventListener("click", () => {
-            this.openApp("settings");
-        });
+        this.settingsTrigger = document.getElementById("open-settings");
+        if (this.settingsTrigger) {
+            this.settingsClickHandler = () => this.openApp("settings");
+            this.settingsTrigger.addEventListener("click", this.settingsClickHandler);
+        }
+    }
+
+    removeEventListeners = () => {
+        if (this.settingsTrigger && this.settingsClickHandler) {
+            this.settingsTrigger.removeEventListener("click", this.settingsClickHandler);
+        }
+    }
+
+    setKeyboardListeners = () => {
+        window.addEventListener('keydown', this.handleGlobalKeyDown);
+    }
+
+    removeKeyboardListeners = () => {
+        window.removeEventListener('keydown', this.handleGlobalKeyDown);
+    }
+
+    showNotification = (title, message) => {
+        const id = `${Date.now()}-${Math.random().toString(36).slice(2, 7)}`;
+        this.setState((prev) => ({
+            notifications: [...prev.notifications, { id, title, message }].slice(-3)
+        }));
+        window.setTimeout(() => {
+            this.setState((prev) => ({ notifications: prev.notifications.filter((item) => item.id !== id) }));
+        }, 2600);
+    }
+
+    handleDesktopAction = (event) => {
+        const action = event?.detail?.action;
+        if (!action) return;
+
+        if (action === 'about-system') {
+            this.showNotification(identity.osName, `${identity.userName} • ${identity.machineName} • v${identity.osVersion}`);
+            this.openApp('about');
+            return;
+        }
+
+        if (action === 'show-shortcuts') {
+            this.setState({ showShortcuts: true });
+            return;
+        }
+
+        if (action === 'restart-experience') {
+            localStorage.removeItem('booting_screen');
+            localStorage.removeItem('screen-locked');
+            localStorage.removeItem('shut-down');
+            this.showNotification(identity.osName, 'Restarting experience...');
+            window.setTimeout(() => window.location.reload(), 120);
+            return;
+        }
+
+        if (action === 'skip-intro') {
+            localStorage.setItem('alex-os-intro-seen', 'true');
+            this.showNotification(identity.osName, 'Intro will be skipped on next visit.');
+        }
+    }
+
+    cycleOpenWindows = () => {
+        const openWindows = this.app_stack.filter((id) => this.state.closed_windows[id] === false && !this.state.minimized_windows[id]);
+        if (openWindows.length <= 1) return;
+        const focusedId = openWindows.find((id) => this.state.focused_windows[id]);
+        const activeIndex = openWindows.indexOf(focusedId);
+        const nextId = openWindows[(activeIndex + 1) % openWindows.length];
+        if (nextId) {
+            this.focus(nextId);
+        }
+    }
+
+    handleGlobalKeyDown = (event) => {
+        const isMetaK = (event.ctrlKey || event.metaKey) && event.key.toLowerCase() === 'k';
+        const isMetaTerminal = (event.ctrlKey || event.metaKey) && event.key === '`';
+        const isAltTab = event.altKey && event.key === 'Tab';
+
+        if (isMetaK) {
+            event.preventDefault();
+            this.setState((prev) => ({ allAppsView: !prev.allAppsView, showShortcuts: false }));
+            return;
+        }
+
+        if (event.key === 'Escape') {
+            this.setState({ allAppsView: false, showShortcuts: false }, this.hideAllContextMenu);
+            return;
+        }
+
+        if (isMetaTerminal) {
+            event.preventDefault();
+            this.openApp('terminal');
+            return;
+        }
+
+        if (isAltTab) {
+            event.preventDefault();
+            this.cycleOpenWindows();
+        }
     }
 
     setContextListeners = () => {
@@ -253,6 +357,53 @@ export class Desktop extends Component {
         return appsJsx;
     }
 
+    renderNotifications = () => {
+        if (!this.state.notifications.length) return null;
+
+        return (
+            <div className="absolute right-4 top-12 z-50 flex w-72 flex-col gap-2 pointer-events-none">
+                {this.state.notifications.map((item) => (
+                    <div key={item.id} className="notification-toast rounded border border-white border-opacity-20 bg-black bg-opacity-70 px-3 py-2 text-sm text-gray-100 shadow-lg">
+                        <div className="text-xs uppercase tracking-[0.2em] text-gray-300">{item.title}</div>
+                        <div className="mt-1 text-xs text-gray-200">{item.message}</div>
+                    </div>
+                ))}
+            </div>
+        );
+    }
+
+    renderShortcutPanel = () => {
+        if (!this.state.showShortcuts) return null;
+        return (
+            <div className="absolute inset-0 z-50 flex items-center justify-center bg-black bg-opacity-40 px-4" role="dialog" aria-modal="true" aria-label="Keyboard Shortcuts">
+                <div className="w-full max-w-lg rounded border border-white border-opacity-20 bg-ub-grey p-4 text-white shadow-xl">
+                    <div className="text-xs uppercase tracking-[0.24em] text-gray-400">Keyboard Shortcuts</div>
+                    <div className="mt-3 space-y-3 text-sm">
+                        <div className="flex items-center justify-between border-b border-white border-opacity-10 pb-2">
+                            <span>Open application launcher</span>
+                            <span className="text-gray-300">Ctrl/Cmd + K</span>
+                        </div>
+                        <div className="flex items-center justify-between border-b border-white border-opacity-10 pb-2">
+                            <span>Open terminal</span>
+                            <span className="text-gray-300">Ctrl/Cmd + `</span>
+                        </div>
+                        <div className="flex items-center justify-between border-b border-white border-opacity-10 pb-2">
+                            <span>Switch open apps</span>
+                            <span className="text-gray-300">Alt + Tab</span>
+                        </div>
+                        <div className="flex items-center justify-between">
+                            <span>Close launcher or overlays</span>
+                            <span className="text-gray-300">Esc</span>
+                        </div>
+                    </div>
+                    <div className="mt-4 flex justify-end">
+                        <button type="button" onClick={() => this.setState({ showShortcuts: false })} className="rounded border border-white border-opacity-20 px-3 py-1.5 text-sm hover:bg-white hover:bg-opacity-10">Close</button>
+                    </div>
+                </div>
+            </div>
+        );
+    }
+
     renderWindows = () => {
         let windowsJsx = [];
         apps.forEach((app, index) => {
@@ -405,9 +556,13 @@ export class Desktop extends Component {
             setTimeout(() => {
                 favourite_apps[objId] = true; // adds opened app to sideBar
                 closed_windows[objId] = false; // openes app's window
-                this.setState({ closed_windows, favourite_apps, allAppsView: false }, this.focus(objId));
+                this.setState({ closed_windows, favourite_apps, allAppsView: false }, () => this.focus(objId));
                 this.app_stack.push(objId);
-            }, 200);
+                const openedApp = apps.find((app) => app.id === objId);
+                if (openedApp) {
+                    this.showNotification(openedApp.title, 'Application opened');
+                }
+            }, 180);
         }
     }
 
@@ -443,6 +598,11 @@ export class Desktop extends Component {
             }
         }
         this.setState({ focused_windows });
+
+        if (this.app_stack.includes(objId)) {
+            this.app_stack.splice(this.app_stack.indexOf(objId), 1);
+            this.app_stack.unshift(objId);
+        }
     }
 
     addNewFolder = () => {
@@ -497,7 +657,7 @@ export class Desktop extends Component {
 
     render() {
         return (
-            <div className={" h-full w-full flex flex-col items-end justify-start content-start flex-wrap-reverse pt-8 bg-transparent relative overflow-hidden overscroll-none window-parent"}>
+            <div className={" h-full w-full pt-8 bg-transparent relative overflow-hidden overscroll-none window-parent"}>
 
                 {/* Window Area */}
                 <div className="absolute h-full w-full bg-transparent" data-context="desktop-area">
@@ -520,7 +680,9 @@ export class Desktop extends Component {
                     openAppByAppId={this.openApp} />
 
                 {/* Desktop Apps */}
-                {this.renderDesktopApps()}
+                <div className="absolute right-3 top-11 z-10 flex flex-col items-end gap-y-1">
+                    {this.renderDesktopApps()}
+                </div>
 
                 {/* Context Menus */}
                 <DesktopMenu active={this.state.context_menus.desktop} openApp={this.openApp} addNewFolder={this.addNewFolder} />
@@ -538,6 +700,16 @@ export class Desktop extends Component {
                     <AllApplications apps={apps}
                         recentApps={this.app_stack}
                         openApp={this.openApp} /> : null}
+
+                {this.renderShortcutPanel()}
+
+                {this.renderNotifications()}
+
+                {this.app_stack.length === 0 ? (
+                    <div className="absolute bottom-4 left-1/2 z-10 -translate-x-1/2 rounded border border-white border-opacity-10 bg-black bg-opacity-40 px-3 py-1.5 text-xs text-gray-300">
+                        No applications open.
+                    </div>
+                ) : null}
 
             </div>
         )

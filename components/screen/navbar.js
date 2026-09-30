@@ -18,11 +18,12 @@ export default class Navbar extends Component {
 				<div
 					tabIndex="0"
 					className={
-						'pl-3 pr-3 outline-none transition duration-100 ease-in-out border-b-2 border-transparent focus:border-ubb-orange py-1 text-xs md:text-sm tracking-[0.2em] uppercase '
+						'pl-3 pr-3 outline-none transition duration-100 ease-in-out border-b-2 border-transparent focus:border-ubb-orange py-1 text-xs md:text-sm tracking-[0.24em] uppercase '
 					}
 				>
 					{identity.osName}
 				</div>
+				<div className="hidden md:block text-xs text-gray-400">{identity.machineName}</div>
 				<div
 					tabIndex="0"
 					className={

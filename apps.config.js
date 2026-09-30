@@ -13,7 +13,7 @@ const apps = [
     {
         id: "about",
         title: "About",
-        description: "Who Alex Murimi is and how he engineers systems.",
+        description: "System profile, engineering focus, and background.",
         icon: './themes/Yaru/system/user-home.png',
         disabled: false,
         favourite: true,
@@ -23,7 +23,7 @@ const apps = [
     {
         id: "projects",
         title: "Projects",
-        description: "Systems and products Alex Murimi has built.",
+        description: "Project directory with architecture and impact.",
         icon: './themes/Yaru/status/projects.svg',
         disabled: false,
         favourite: true,
@@ -33,7 +33,7 @@ const apps = [
     {
         id: "experience",
         title: "Experience",
-        description: "Alex Murimi's engineering journey and impact.",
+        description: "Career log and measurable engineering outcomes.",
         icon: './themes/Yaru/status/education.svg',
         disabled: false,
         favourite: true,
@@ -43,7 +43,7 @@ const apps = [
     {
         id: "writing",
         title: "Writing",
-        description: "Technical notes, ideas, and writing from Alex Murimi.",
+        description: "Technical notes directory.",
         icon: './themes/Yaru/apps/gedit.png',
         disabled: false,
         favourite: true,
@@ -53,7 +53,7 @@ const apps = [
     {
         id: "resume",
         title: "Resume",
-        description: "Alex Murimi's current resume.",
+        description: "View and download resume.pdf.",
         icon: './themes/Yaru/status/download.svg',
         disabled: false,
         favourite: true,
@@ -67,13 +67,13 @@ const apps = [
         icon: './themes/Yaru/apps/bash.png',
         disabled: false,
         favourite: true,
-        desktop_shortcut: false,
+        desktop_shortcut: true,
         screen: displayTerminal,
     },
     {
         id: "contact",
         title: "Contact",
-        description: "Get in touch with Alex Murimi.",
+        description: "Email and professional links.",
         icon: './themes/Yaru/apps/gedit.png',
         disabled: false,
         favourite: true,
@@ -83,7 +83,7 @@ const apps = [
     {
         id: "settings",
         title: "Settings",
-        description: "Customize Alex OS display settings.",
+        description: "Appearance, motion, and experience controls.",
         icon: './themes/Yaru/apps/gnome-control-center.png',
         disabled: false,
         favourite: true,

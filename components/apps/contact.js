@@ -1,117 +1,43 @@
-import React, { Component } from 'react';
-import $ from 'jquery';
-import ReactGA from 'react-ga4';
-import emailjs from '@emailjs/browser';
+import React from 'react';
 import identity from '../../config/identity';
 
-export class Contact extends Component {
+function ContactRow({ label, value, href }) {
+  if (!value) return null;
 
-    constructor() {
-        super();
-        this.state = {
-            sending: false,
-        }
-    }
+  return (
+    <div className="rounded border border-white border-opacity-10 bg-black bg-opacity-20 px-3 py-3">
+      <div className="text-xs uppercase tracking-[0.2em] text-gray-400">{label}</div>
+      {href ? (
+        <a href={href} target={href.startsWith('mailto:') ? '_self' : '_blank'} rel={href.startsWith('mailto:') ? undefined : 'noreferrer noopener'} className="mt-1 block text-sm text-emerald-200 underline underline-offset-2">
+          {value}
+        </a>
+      ) : (
+        <div className="mt-1 text-sm text-gray-200">{value}</div>
+      )}
+    </div>
+  );
+}
 
-    componentDidMount() {
-        emailjs.init(process.env.NEXT_PUBLIC_USER_ID);
-    }
-
-    sendMessage = async () => {
-        let name = $("#sender-name").val();
-        let subject = $("#sender-subject").val();
-        let message = $("#sender-message").val();
-
-        name = name.trim();
-        subject = subject.trim();
-        message = message.trim();
-
-        let error = false;
-
-        if (name.length === 0) {
-            $("#sender-name").val('');
-            $("#sender-name").attr("placeholder", "Name must not be Empty!");
-            error = true;
-        }
-
-        if (message.length === 0) {
-            $("#sender-message").val('');
-            $("#sender-message").attr("placeholder", "Message must not be Empty!");
-            error = true;
-        }
-        if (error) return;
-
-        this.setState({ sending: true });
-
-        const serviceID = process.env.NEXT_PUBLIC_SERVICE_ID;
-        const templateID = process.env.NEXT_PUBLIC_TEMPLATE_ID;
-        const templateParams = {
-            'name': name,
-            'subject': subject,
-            'message': message,
-        }
-
-        emailjs.send(serviceID, templateID, templateParams).then(() => {
-            this.setState({ sending: false });
-            $("#close-contact").trigger("click");
-        }).catch(() => {
-            this.setState({ sending: false });
-            $("#close-contact").trigger("click");
-        })
-
-        ReactGA.event({
-            category: "Send Message",
-            action: `${name}, ${subject}, ${message}`
-        });
-
-    }
-
-    render() {
-        return (
-            <div className="w-full h-full relative flex flex-col bg-ub-cool-grey text-white select-none">
-                <div className="flex items-center justify-between w-full bg-ub-gedit-light bg-opacity-60 border-b border-t border-blue-400 text-sm">
-                    <span className="font-bold ml-2">Contact {identity.name}</span>
-                    <div className="flex">
-                        <button type="button" onClick={this.sendMessage} className="border border-black bg-black bg-opacity-50 px-3 py-0.5 my-1 mx-1 rounded hover:bg-opacity-80">Send</button>
-                    </div>
-                </div>
-                <div className="relative flex-grow flex flex-col bg-ub-gedit-dark font-normal windowMainScreen">
-                    <div className="absolute left-0 top-0 h-full px-2 bg-ub-gedit-darker"></div>
-                    <div className="pl-6 pr-4 py-3 border-b border-white border-opacity-10 text-sm space-y-1">
-                        <div>{identity.professionalTitle}</div>
-                        <div className="text-gray-300">{identity.location}</div>
-                        <div><a href={`mailto:${identity.email}`} className="underline underline-offset-2">{identity.email}</a></div>
-                        <div>{identity.phone}</div>
-                    </div>
-                    <div className="relative">
-                        <input id="sender-name" className=" w-full text-ubt-gedit-orange focus:bg-ub-gedit-light outline-none font-medium text-sm pl-6 py-0.5 bg-transparent" placeholder="Your Email / Name :" spellCheck="false" autoComplete="off" type="text" />
-                        <span className="absolute left-1 top-1/2 transform -translate-y-1/2 font-bold light text-sm text-ubt-gedit-blue">1</span>
-                    </div>
-                    <div className="relative">
-                        <input id="sender-subject" className=" w-full my-1 text-ubt-gedit-blue focus:bg-ub-gedit-light gedit-subject outline-none text-sm font-normal pl-6 py-0.5 bg-transparent" placeholder="Subject" spellCheck="false" autoComplete="off" type="text" />
-                        <span className="absolute left-1 top-1/2 transform -translate-y-1/2 font-bold  text-sm text-ubt-gedit-blue">2</span>
-                    </div>
-                    <div className="relative flex-grow">
-                        <textarea id="sender-message" className=" w-full gedit-message font-light text-sm resize-none h-full windowMainScreen outline-none tracking-wider pl-6 py-1 bg-transparent" placeholder="Message" spellCheck="false" autoComplete="none" type="text" />
-                        <span className="absolute left-1 top-1 font-bold  text-sm text-ubt-gedit-blue">3</span>
-                    </div>
-                </div>
-                {
-                    (this.state.sending
-                        ?
-                        <div className="flex justify-center items-center animate-pulse h-full w-full bg-gray-400 bg-opacity-30 absolute top-0 left-0">
-                            <img className={" w-8 absolute animate-spin"} src="./themes/Yaru/status/process-working-symbolic.svg" alt="Process Symbol" />
-                        </div>
-                        : null
-                    )
-                }
-            </div>
-        )
-    }
+export function Contact() {
+  return (
+    <div className="w-full h-full bg-ub-grey text-white overflow-y-auto windowMainScreen">
+      <div className="sticky top-0 z-10 border-b border-white border-opacity-10 bg-black bg-opacity-30 backdrop-blur-sm px-4 py-3">
+        <div className="text-xs uppercase tracking-[0.25em] text-gray-400">CONTACT</div>
+        <div className="mt-1 text-sm text-gray-300">Reach out through the channels below.</div>
+      </div>
+      <div className="p-4 space-y-3">
+        <ContactRow label="Email" value={identity.email} href={`mailto:${identity.email}`} />
+        <ContactRow label="GitHub" value={identity.github.replace('https://', '')} href={identity.github} />
+        {identity.linkedin ? <ContactRow label="LinkedIn" value={identity.linkedin.replace('https://', '')} href={identity.linkedin} /> : null}
+        <ContactRow label="Phone" value={identity.phone} />
+        <ContactRow label="Location" value={identity.location} />
+      </div>
+    </div>
+  );
 }
 
 export default Contact;
 
 export const displayContact = () => {
-    return <Contact> </Contact>;
-}
+  return <Contact></Contact>;
+};

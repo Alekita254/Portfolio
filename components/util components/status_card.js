@@ -94,7 +94,7 @@ export class StatusCard extends Component {
         const { battery } = this.state;
         
         if (!battery.supported) {
-            return "2:40 Remaining (75%)"; // Fallback to original text
+            return "Battery status unavailable";
         }
 
         const levelText = `${battery.level}%`;
@@ -142,6 +142,13 @@ export class StatusCard extends Component {
     };
 
     render() {
+        const dispatchDesktopAction = (actionName) => {
+            window.dispatchEvent(new CustomEvent('alex-os:desktop-action', {
+                detail: { action: actionName }
+            }));
+            this.props.toggleVisible();
+        };
+
         return (
             <div
                 ref={this.wrapperRef}
@@ -189,6 +196,29 @@ export class StatusCard extends Component {
                 <div className="w-64 flex content-center justify-center">
                     <div className="w-2/4 border-black border-opacity-50 border-b my-2 border-solid" />
                 </div>
+                <div className="w-64 px-5 py-1 text-[11px] uppercase tracking-[0.2em] text-gray-400">System</div>
+                <div
+                    onClick={() => dispatchDesktopAction('about-system')}
+                    className="w-64 py-1.5 flex items-center justify-center bg-ub-cool-grey hover:bg-ub-warm-grey hover:bg-opacity-20"
+                >
+                    <div className="w-8">
+                        <img width="16px" height="16px" src="./themes/Yaru/status/about.svg" alt="system info" />
+                    </div>
+                    <div className="w-2/3 flex items-center justify-between">
+                        <span>About Alex OS</span>
+                    </div>
+                </div>
+                <div
+                    onClick={() => dispatchDesktopAction('show-shortcuts')}
+                    className="w-64 py-1.5 flex items-center justify-center bg-ub-cool-grey hover:bg-ub-warm-grey hover:bg-opacity-20"
+                >
+                    <div className="w-8">
+                        <img width="16px" height="16px" src="./themes/Yaru/status/skills.svg" alt="keyboard shortcuts" />
+                    </div>
+                    <div className="w-2/3 flex items-center justify-between">
+                        <span>Keyboard Shortcuts</span>
+                    </div>
+                </div>
                 <div
                     id="open-settings"
                     className="w-64 py-1.5 flex items-center justify-center bg-ub-cool-grey hover:bg-ub-warm-grey hover:bg-opacity-20"
@@ -198,6 +228,28 @@ export class StatusCard extends Component {
                     </div>
                     <div className="w-2/3 flex items-center justify-between">
                         <span>Settings</span>
+                    </div>
+                </div>
+                <div
+                    onClick={() => dispatchDesktopAction('restart-experience')}
+                    className="w-64 py-1.5 flex items-center justify-center bg-ub-cool-grey hover:bg-ub-warm-grey hover:bg-opacity-20"
+                >
+                    <div className="w-8">
+                        <img width="16px" height="16px" src="./themes/Yaru/status/chrome_refresh.svg" alt="restart experience" />
+                    </div>
+                    <div className="w-2/3 flex items-center justify-between">
+                        <span>Restart Experience</span>
+                    </div>
+                </div>
+                <div
+                    onClick={() => dispatchDesktopAction('skip-intro')}
+                    className="w-64 py-1.5 flex items-center justify-center bg-ub-cool-grey hover:bg-ub-warm-grey hover:bg-opacity-20"
+                >
+                    <div className="w-8">
+                        <img width="16px" height="16px" src="./themes/Yaru/status/projects.svg" alt="skip intro" />
+                    </div>
+                    <div className="w-2/3 flex items-center justify-between">
+                        <span>Skip Intro</span>
                     </div>
                 </div>
                 <div
