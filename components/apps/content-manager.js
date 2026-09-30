@@ -178,6 +178,7 @@ export function ContentManager() {
               </button>
             </div>
             <p className="text-xs leading-6 text-gray-400">Edits stay in this browser until you export or reset them. Saving writes the bundle to {getContentBundleStorageKey()} and reloads the OS so every app sees the new content.</p>
+            <p className="text-xs leading-6 text-gray-400">Each project can include projectUrl, githubUrl, and youtubeUrl. Any of these fields can be null.</p>
           </Section>
         </div>
 
@@ -212,6 +213,12 @@ export function ContentManager() {
                   <div>{previewPortfolio.skills?.engineering?.slice(0, 4).join(" · ")}</div>
                 </div>
               </div>
+            </div>
+            <div className="mt-3 rounded border border-white border-opacity-10 bg-black bg-opacity-20 p-3 text-sm text-gray-200">
+              <div className="text-xs uppercase tracking-[0.2em] text-gray-400">Project links schema</div>
+              <div className="mt-2">projectUrl: {previewPortfolio.projects?.[0]?.projectUrl || "null"}</div>
+              <div>githubUrl: {previewPortfolio.projects?.[0]?.githubUrl || "null"}</div>
+              <div>youtubeUrl: {previewPortfolio.projects?.[0]?.youtubeUrl || "null"}</div>
             </div>
           </Section>
         </div>

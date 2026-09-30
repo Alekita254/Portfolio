@@ -77,6 +77,28 @@ function emphasizeMetrics(text) {
   });
 }
 
+function extractYoutubeVideoId(url) {
+  if (!url || typeof url !== "string") {
+    return null;
+  }
+
+  const trimmed = url.trim();
+  const patterns = [
+    /(?:youtube\.com\/watch\?v=)([a-zA-Z0-9_-]{11})/,
+    /(?:youtube\.com\/embed\/)([a-zA-Z0-9_-]{11})/,
+    /(?:youtu\.be\/)([a-zA-Z0-9_-]{11})/,
+  ];
+
+  for (const pattern of patterns) {
+    const match = trimmed.match(pattern);
+    if (match && match[1]) {
+      return match[1];
+    }
+  }
+
+  return null;
+}
+
 function AboutApp() {
   const { profile, focusAreas, education, certifications, interests } = portfolioContent;
 
@@ -220,6 +242,45 @@ function ProjectDetails({ project }) {
       .filter(Boolean);
   }, [project]);
 
+  const projectLinks = useMemo(() => {
+    const primaryLinks = [
+      { label: "Project URL", url: project.projectUrl },
+      { label: "GitHub Repository", url: project.githubUrl },
+      { label: "YouTube Demo", url: project.youtubeUrl },
+    ].filter((entry) => typeof entry.url === "string" && entry.url.trim().length > 0);
+
+    const extraLinks = (project.links || []).filter(
+      (entry) => entry && typeof entry.url === "string" && entry.url.trim().length > 0
+    );
+
+    const combined = [...primaryLinks, ...extraLinks];
+    const deduped = [];
+    const seen = new Set();
+
+    combined.forEach((entry) => {
+      const key = entry.url.trim().toLowerCase();
+      if (!seen.has(key)) {
+        seen.add(key);
+        deduped.push(entry);
+      }
+    });
+
+    return deduped;
+  }, [project]);
+
+  const youtubePreview = useMemo(() => {
+    const videoId = extractYoutubeVideoId(project.youtubeUrl);
+    if (!videoId) {
+      return null;
+    }
+
+    return {
+      url: project.youtubeUrl,
+      thumbnail: `https://i.ytimg.com/vi/${videoId}/hqdefault.jpg`,
+      title: project.youtubeTitle || `${project.name} Demo`,
+    };
+  }, [project]);
+
   return (
     <div className="project-panel space-y-4 rounded border border-white border-opacity-10 bg-black bg-opacity-20 p-4">
       <div>
@@ -266,9 +327,29 @@ function ProjectDetails({ project }) {
       ) : null}
 
       <Section title="Links" compact>
-        {project.links && project.links.length > 0 ? (
+        {youtubePreview ? (
+          <a
+            href={youtubePreview.url}
+            target="_blank"
+            rel="noreferrer noopener"
+            className="group block overflow-hidden rounded border border-red-600 border-opacity-40 bg-black bg-opacity-30"
+          >
+            <div className="relative">
+              <img src={youtubePreview.thumbnail} alt={youtubePreview.title} className="h-36 w-full object-cover object-center" />
+              <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-35 transition group-hover:bg-opacity-45">
+                <div className="flex items-center gap-2 rounded-full border border-white border-opacity-40 bg-black bg-opacity-55 px-3 py-1 text-xs uppercase tracking-[0.2em] text-white">
+                  <span className="h-0 w-0 border-b-[7px] border-l-[12px] border-t-[7px] border-b-transparent border-l-red-500 border-t-transparent"></span>
+                  <span>YouTube</span>
+                </div>
+              </div>
+            </div>
+            <div className="border-t border-white border-opacity-10 px-3 py-2 text-sm text-red-100">{youtubePreview.title}</div>
+          </a>
+        ) : null}
+
+        {projectLinks.length > 0 ? (
           <div className="space-y-2 text-sm text-gray-200">
-            {project.links.map((link) => (
+            {projectLinks.map((link) => (
               <div key={link.url}>
                 <a href={link.url} target="_blank" rel="noreferrer noopener" className="underline underline-offset-2">
                   {link.label}
